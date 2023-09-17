@@ -27,7 +27,6 @@ public:
     bool isCMYK;
     bool isHSL;
     QColor currentColor;
-    bool changed;
     void SetColor();
     void RGBtoCMYK();
     void CMYKtoRGB();

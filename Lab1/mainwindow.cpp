@@ -13,28 +13,54 @@ MainWindow::MainWindow(QWidget *parent)
     SetColor();
 
     //RGB SLIDERS -> CHANGE RGB SPINS
-    connect(ui->horizontalSliderR, SIGNAL(valueChanged(int)), this, SLOT(RGBBoxChanger()));
-    connect(ui->horizontalSliderG, SIGNAL(valueChanged(int)), this, SLOT(RGBBoxChanger()));
-    connect(ui->horizontalSliderB, SIGNAL(valueChanged(int)), this, SLOT(RGBBoxChanger()));
+    connect(ui->horizontalSliderR, SIGNAL(sliderMoved(int)), this, SLOT(RGBBoxChanger()));
+    connect(ui->horizontalSliderG, SIGNAL(sliderMoved(int)), this, SLOT(RGBBoxChanger()));
+    connect(ui->horizontalSliderB, SIGNAL(sliderMoved(int)), this, SLOT(RGBBoxChanger()));
 
     //RGB SPINS -> CHANGE RGB SLIDERS
-    connect(ui->spinBoxR, SIGNAL(valueChanged(int)), this, SLOT(RGBSliderChanger()));
-    connect(ui->spinBoxG, SIGNAL(valueChanged(int)), this, SLOT(RGBSliderChanger()));
-    connect(ui->spinBoxB, SIGNAL(valueChanged(int)), this, SLOT(RGBSliderChanger()));
+    connect(ui->spinBoxR, SIGNAL(editingFinished()), this, SLOT(RGBSliderChanger()));
+    connect(ui->spinBoxG, SIGNAL(editingFinished()), this, SLOT(RGBSliderChanger()));
+    connect(ui->spinBoxB, SIGNAL(editingFinished()), this, SLOT(RGBSliderChanger()));
 
     //CMYK SPINS FIXED WHEN ANY RGB IS CHANGED
-    connect(ui->horizontalSliderR, SIGNAL(valueChanged(int)), this, SLOT(CMYKparam()));
-    connect(ui->horizontalSliderG, SIGNAL(valueChanged(int)), this, SLOT(CMYKparam()));
-    connect(ui->horizontalSliderB, SIGNAL(valueChanged(int)), this, SLOT(CMYKparam()));
+    connect(ui->horizontalSliderR, SIGNAL(sliderMoved(int)), this, SLOT(CMYKparam()));
+    connect(ui->horizontalSliderG, SIGNAL(sliderMoved(int)), this, SLOT(CMYKparam()));
+    connect(ui->horizontalSliderB, SIGNAL(sliderMoved(int)), this, SLOT(CMYKparam()));
 
-    connect(ui->spinBoxR, SIGNAL(valueChanged(int)), this, SLOT(CMYKparam()));
-    connect(ui->spinBoxG, SIGNAL(valueChanged(int)), this, SLOT(CMYKparam()));
-    connect(ui->spinBoxB, SIGNAL(valueChanged(int)), this, SLOT(CMYKparam()));
+    connect(ui->horizontalSliderR, SIGNAL(sliderMoved(int)), this, SLOT(HSLparam()));
+    connect(ui->horizontalSliderG, SIGNAL(sliderMoved(int)), this, SLOT(HSLparam()));
+    connect(ui->horizontalSliderB, SIGNAL(sliderMoved(int)), this, SLOT(HSLparam()));
 
-    connect(ui->spinBoxR, SIGNAL(valueChanged(int)), this, SLOT(HSLparam()));
-    connect(ui->spinBoxG, SIGNAL(valueChanged(int)), this, SLOT(HSLparam()));
-    connect(ui->spinBoxB, SIGNAL(valueChanged(int)), this, SLOT(HSLparam()));
+    connect(ui->spinBoxR, SIGNAL(editingFinished()), this, SLOT(CMYKparam()));
+    connect(ui->spinBoxG, SIGNAL(editingFinished()), this, SLOT(CMYKparam()));
+    connect(ui->spinBoxB, SIGNAL(editingFinished()), this, SLOT(CMYKparam()));
 
+    connect(ui->spinBoxR, SIGNAL(editingFinished()), this, SLOT(HSLparam()));
+    connect(ui->spinBoxG, SIGNAL(editingFinished()), this, SLOT(HSLparam()));
+    connect(ui->spinBoxB, SIGNAL(editingFinished()), this, SLOT(HSLparam()));
+
+    connect(ui->spinBoxH, SIGNAL(editingFinished()), this, SLOT(HSLBoxChanger()));
+    connect(ui->spinBoxS, SIGNAL(editingFinished()), this, SLOT(HSLBoxChanger()));
+    connect(ui->spinBoxL, SIGNAL(editingFinished()), this, SLOT(HSLBoxChanger()));
+
+    connect(ui->spinBoxH, SIGNAL(editingFinished()), this, SLOT(RGBparam()));
+    connect(ui->spinBoxS, SIGNAL(editingFinished()), this, SLOT(RGBparam()));
+    connect(ui->spinBoxL, SIGNAL(editingFinished()), this, SLOT(RGBparam()));
+
+    connect(ui->spinBoxC, SIGNAL(editingFinished()), this, SLOT(CMYKBoxChanger()));
+    connect(ui->spinBoxM, SIGNAL(editingFinished()), this, SLOT(CMYKBoxChanger()));
+    connect(ui->spinBoxY, SIGNAL(editingFinished()), this, SLOT(CMYKBoxChanger()));
+    connect(ui->spinBoxK, SIGNAL(editingFinished()), this, SLOT(CMYKBoxChanger()));
+
+    connect(ui->spinBoxC, SIGNAL(editingFinished()), this, SLOT(RGBparam()));
+    connect(ui->spinBoxM, SIGNAL(editingFinished()), this, SLOT(RGBparam()));
+    connect(ui->spinBoxY, SIGNAL(editingFinished()), this, SLOT(RGBparam()));
+    connect(ui->spinBoxK, SIGNAL(editingFinished()), this, SLOT(RGBparam()));
+
+    connect(ui->spinBoxC, SIGNAL(editingFinished()), this, SLOT(HSLparam()));
+    connect(ui->spinBoxM, SIGNAL(editingFinished()), this, SLOT(HSLparam()));
+    connect(ui->spinBoxY, SIGNAL(editingFinished()), this, SLOT(HSLparam()));
+    connect(ui->spinBoxK, SIGNAL(editingFinished()), this, SLOT(HSLparam()));
     //CMYK SPINS CHANGED -> RGB FIXED: SPINS AND SLIDERS
 
 }
@@ -81,10 +107,15 @@ void MainWindow:: RGBSliderChanger()
 }
 void MainWindow::RGBtoCMYK()
 {
-    cmyk.k = qMin(qMin(255 - rgb.r, 255 - rgb.g), 255 - rgb.b);
+    /*cmyk.k = qMin(qMin(255 - rgb.r, 255 - rgb.g), 255 - rgb.b);
     cmyk.c = (int)((255 - rgb.r - cmyk.k)/(1. - (cmyk.k/255.)));
     cmyk.m = (int)((255 - rgb.g - cmyk.k)/(1. - (cmyk.k/255.)));
-    cmyk.y = (int)((255 - rgb.b - cmyk.k)/(1. - (cmyk.k/255.)));
+    cmyk.y = (int)((255 - rgb.b - cmyk.k)/(1. - (cmyk.k/255.)));*/
+
+    cmyk.k = qMin(qMin(255 - currentColor.red(), 255 - currentColor.green()), 255 - currentColor.blue());
+    cmyk.c = (int)((255 - currentColor.red() - cmyk.k)/(1. - (cmyk.k/255.)));
+    cmyk.m = (int)((255 - currentColor.green() - cmyk.k)/(1. - (cmyk.k/255.)));
+    cmyk.y = (int)((255 - currentColor.blue() - cmyk.k)/(1. - (cmyk.k/255.)));
 }
 void MainWindow:: CMYKtoRGB()
 {
@@ -135,17 +166,6 @@ void MainWindow:: CMYKBoxChanger()
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
 void MainWindow:: HSLBoxChanger()
 {
     hsl.h = ui->spinBoxH->value();
@@ -154,6 +174,18 @@ void MainWindow:: HSLBoxChanger()
     currentColor.setHsl(hsl.h, hsl.s, hsl.l);
     SetColor();
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 MainWindow::~MainWindow()
@@ -165,13 +197,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
     currentColor = colorDialog->getColor();
-    disconnect(ui->horizontalSliderR, SIGNAL(valueChanged(int)), this, SLOT(RGBBoxChanger()));
-    disconnect(ui->horizontalSliderG, SIGNAL(valueChanged(int)), this, SLOT(RGBBoxChanger()));
-    disconnect(ui->horizontalSliderB, SIGNAL(valueChanged(int)), this, SLOT(RGBBoxChanger()));
-    disconnect(ui->horizontalSliderR, SIGNAL(valueChanged(int)), this, SLOT(CMYKparam()));
-    disconnect(ui->horizontalSliderG, SIGNAL(valueChanged(int)), this, SLOT(CMYKparam()));
-    disconnect(ui->horizontalSliderB, SIGNAL(valueChanged(int)), this, SLOT(CMYKparam()));
-
+    SetColor();
     ui->horizontalSliderR->setValue(currentColor.red());
     ui->horizontalSliderG->setValue(currentColor.green());
     ui->horizontalSliderB->setValue(currentColor.blue());
@@ -186,15 +212,6 @@ void MainWindow::on_pushButton_clicked()
     ui->spinBoxS->setValue(currentColor.hslSaturation());
     ui->spinBoxL->setValue(currentColor.lightness());
 
-    connect(ui->horizontalSliderR, SIGNAL(valueChanged(int)), this, SLOT(RGBBoxChanger()));
-    connect(ui->horizontalSliderG, SIGNAL(valueChanged(int)), this, SLOT(RGBBoxChanger()));
-    connect(ui->horizontalSliderB, SIGNAL(valueChanged(int)), this, SLOT(RGBBoxChanger()));
-    connect(ui->horizontalSliderR, SIGNAL(valueChanged(int)), this, SLOT(CMYKparam()));
-    connect(ui->horizontalSliderG, SIGNAL(valueChanged(int)), this, SLOT(CMYKparam()));
-    connect(ui->horizontalSliderB, SIGNAL(valueChanged(int)), this, SLOT(CMYKparam()));
-
-    update();
-    SetColor();
 }
 
 
